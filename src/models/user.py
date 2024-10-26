@@ -2,31 +2,34 @@ from aiogram import Bot
 from aiogram.types import Message
 
 from src.models.user_states import (
-    states_tree,
-    main_menu_sate,
-    OrthoepyState
+    StatesTree,
+    MainMenuState,
+    OrthoepyState,
+    SyntacticNormsAndRules
 )
 
 class UserData():
     orthoepy_record = 0
+    syntactic_norms_and_rules_record = 0
 
 class User():
     id: str
-    tree: states_tree
+    tree: StatesTree
     bot: Bot
     data: UserData = UserData()
 
     def __init__(self, id: str, bot: Bot) -> None:
         self.id = id
         self.bot = bot
-        self.tree = states_tree(id, self)
+        self.tree = StatesTree(id, self)
         
     async def setup_tree(self):
-        mms = main_menu_sate(self.tree)
+        mms = MainMenuState(self.tree)
         orth = OrthoepyState(self.tree)
+        snar = SyntacticNormsAndRules(self.tree)
         self.tree.add_state(mms)
-        #await mms.enable()
         self.tree.add_state(orth)
+        self.tree.add_state(snar)
 
     async def new_message(self, message: Message):
         await self.tree.execute_current_state(message)

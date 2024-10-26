@@ -8,7 +8,6 @@ class number4_loader():
             self.c_words = [word[0] for word in words]
             self.w_words = [word[1] for word in words]
 
-
     def get_random_pair(self) -> tuple[str, str]:
         ri = random.randint(0, len(self.c_words) - 1)
         return self.c_words[ri], self.w_words[ri]
