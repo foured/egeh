@@ -222,18 +222,22 @@ class SyntacticNormsAndRules(BaseUserState):
         elif self.sub_state == SubState.RESTART:
             if txt.lower() == 'заново':
                 await self.start_game()
+
             elif txt.lower() == 'назад':
                 await self.enable()
+
             else:
                 await self.tree.user.bot.send_message(
                         chat_id=self.tree.id, 
                         text='Нажмите на клавиатуру!', 
                         reply_markup=reply.restart_back_kb)
+                
         elif self.sub_state == SubState.GAME:
             if self.task_handler.check(txt.lower()):
                 self.count += 1
                 await message.answer('✅Правльно!')
                 await self.game_tick()
+
             else:
                 self.sub_state = SubState.RESTART
                 if self.count > self.tree.user.data.syntactic_norms_and_rules_record:
@@ -241,11 +245,11 @@ class SyntacticNormsAndRules(BaseUserState):
                     await message.answer(f'❌Ошибка! 🎉Новый рекорд: {self.count}!\n' 
                                          f'правильный ответ: {self.task_handler.get_right()}',
                                          reply_markup=reply.restart_back_kb)
+                    
                 else:
                     await message.answer(f'❌Ошибка! Счёт: {self.count}!\n' 
                                          f'правильный ответ: {self.task_handler.get_right()}',
                                          reply_markup=reply.restart_back_kb)
-
 
     async def start_game(self):
         self.sub_state = SubState.GAME
